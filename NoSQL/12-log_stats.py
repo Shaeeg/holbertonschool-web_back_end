@@ -12,7 +12,8 @@ def log_stats(mongo_collection, option=None):
     """Function for logging stats"""
     items = {}
     if option:
-        value = mongo_collection.count_documents({"method": option})
+        value = mongo_collection.count_documents(
+            {"method": {"$regex": option}})
         print(f"\tmethod {option}: {value}")
         return
 
@@ -20,9 +21,8 @@ def log_stats(mongo_collection, option=None):
     print(f"{result} logs")
     print("Methods:")
     for method in METHODS:
-        log_stats(mongo_collection, method)
-    status_check = mongo_collection.count_documents(
-        {"method": "GET", "path": "/status"})
+        log_stats(nginx_collection, method)
+    status_check = mongo_collection.count_documents({"path": "/status"})
     print(f"{status_check} status check")
     print("IPs:")
 
